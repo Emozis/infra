@@ -1,3 +1,8 @@
+resource "aws_iam_instance_profile" "ec2_profile" {
+ name = "${var.instance_name}_profile"
+ role = aws_iam_role.ec2_role.name
+}
+
 resource "aws_iam_role" "ec2_role" {
  name = "${var.instance_name}_role"
 
@@ -38,7 +43,26 @@ resource "aws_iam_role_policy" "secrets_policy" {
  })
 }
 
-resource "aws_iam_instance_profile" "ec2_profile" {
- name = "${var.instance_name}_profile"
- role = aws_iam_role.ec2_role.name
+resource "aws_iam_role_policy" "s3_policy" {
+  name = "${var.instance_name}_s3_policy"
+  role = aws_iam_role.ec2_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:ListBucket",
+          "s3:DeleteObject"
+        ]
+        Resource = [
+          "arn:aws:s3:::${var.bucket_name}",
+          "arn:aws:s3:::${var.bucket_name}/*"
+        ]
+      }
+    ]
+  })
 }

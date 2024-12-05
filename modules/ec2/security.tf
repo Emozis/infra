@@ -1,6 +1,7 @@
 resource "aws_security_group" "ec2_sg" {
-  name        = "allow_ssh"
+  name        = "${var.instance_name}_sg"
   description = "Allow SSH inbound traffic"
+  vpc_id      = var.vpc_id
 
   ingress {
     description = "SSH"
@@ -34,6 +35,6 @@ resource "aws_security_group" "ec2_sg" {
   }
 
   tags = {
-    Name = "${var.instance_name}_allow_ssh"
+    Name = "${var.instance_name}_sg"
   }
 }
