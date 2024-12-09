@@ -66,3 +66,25 @@ resource "aws_iam_role_policy" "s3_policy" {
     ]
   })
 }
+
+resource "aws_iam_role_policy" "ssm_policy" {
+  name = "${var.instance_name}_ssm_policy"
+  role = aws_iam_role.ec2_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ssm:GetParameter",
+          "ssm:GetParameters",
+          "ssm:GetParametersByPath"
+        ]
+        Resource = [
+          "arn:aws:ssm:ap-northeast-2:774305610767:parameter/emogi/*"
+        ]
+      }
+    ]
+  })
+}

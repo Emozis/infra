@@ -25,3 +25,22 @@ module "cloudfront" {
   bucket_regional_domain_name     = module.s3.bucket_regional_domain_name
   cloudfront_access_identity_path = module.s3.cloudfront_access_identity_path
 }
+
+module "ssm_parameters" {
+  source = "./modules/ssm"
+  
+  parameters = {
+    "/emogi/s3/bucket_name" = {
+      description = "Emogi S3 Bucket Name"
+      type        = "String"
+      value       = module.s3.bucket_id
+      environment = "prod"
+    }
+    "/emogi/cloudfront/domain_name" = {
+      description = "Emogi CloudFront Distribution Domain Name"
+      type        = "String"
+      value       = module.cloudfront.cloudfront_domain_name
+      environment = "prod"
+    }
+  }
+}
