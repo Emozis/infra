@@ -11,12 +11,12 @@ module "emogi_app" {
   user_data_path  = "script/initail_server_setting.sh"
   vpc_id          = module.vpc.vpc_id
   subnet_id       = module.vpc.public_subnet_id
-  bucket_name = var.bucket_name
+  bucket_name = local.env_vars["BUCKET_NAME"]
 }
 
 module "s3" {
   source      = "./modules/s3"
-  bucket_name = var.bucket_name
+  bucket_name = local.env_vars["BUCKET_NAME"]
 }
 
 module "cloudfront" {
@@ -30,8 +30,8 @@ module "rds" {
   source = "./modules/rds"
   
   db_name     = "emogi"
-  db_username = "emogi_admin"
-  db_password = var.db_password
+  db_username = local.env_vars["DB_USERNAME"]
+  db_password = local.env_vars["DB_PASSWORD"]
   
   vpc_id     = module.vpc.vpc_id
   subnet_ids = [

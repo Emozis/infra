@@ -37,7 +37,7 @@ resource "aws_iam_role_policy" "secrets_policy" {
        Action = [
          "secretsmanager:GetSecretValue"
        ]
-       Resource = "arn:aws:secretsmanager:ap-northeast-2:774305610767:secret:/prod/emogi/env*"
+       Resource = "arn:aws:secretsmanager:ap-northeast-2:774305610767:secret:/emogi/env-variables*"
      }
    ]
  })
