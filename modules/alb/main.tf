@@ -1,25 +1,30 @@
 resource "aws_lb" "emogi_alb" {
-  name               = "emogi-alb"
+  name               = "${var.project_name}-alb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb_sg.id]
   subnets            = var.public_subnet_ids
 
   tags = {
-    Name = "emogi-alb"
+    Name = "${var.project_name}-alb"
   }
 }
 
 resource "aws_lb_target_group" "emogi_tg" {
-  name     = "emogi-target-group"
+  name     = "${var.project_name}-alb-target-group"
   port     = 80
   protocol = "HTTP"
   vpc_id   = var.vpc_id
 
   health_check {
-    path                = "/"
+    enabled             = true
     healthy_threshold   = 2
-    unhealthy_threshold = 10
+    unhealthy_threshold = 2
+    timeout             = 5
+    interval            = 10
+    path                = "/health"
+    protocol            = "HTTP"
+    matcher             = "200"
   }
 }
 
@@ -35,7 +40,7 @@ resource "aws_lb_listener" "front_end" {
 }
 
 resource "aws_security_group" "alb_sg" {
-  name        = "emogi-alb-sg"
+  name        = "${var.project_name}-alb-sg"
   description = "Security group for ALB"
   vpc_id      = var.vpc_id
 

@@ -1,10 +1,7 @@
 #!/bin/bash
 
-# 시스템 업데이트 및 nginx 설치
+# 시스템 업데이트
 sudo yum update -y
-sudo yum install -y nginx
-sudo systemctl start nginx
-sudo systemctl enable nginx
 
 # docker 설치 및 실행
 sudo yum install -y docker
@@ -21,7 +18,7 @@ docker run -d \
   --name emogi-app \
   -e ENV=prod \
   -v ~/.aws:/root/.aws \
-  -p 8000:8000 \
+  -p 80:8000 \
   --health-cmd='python -c "import urllib.request; urllib.request.urlopen(\"http://localhost:8000/health\")"' \
   --health-interval=10s \
   --health-timeout=5s \
