@@ -3,6 +3,15 @@ module "vpc" {
   project_name = var.project_name
 }
 
+module "alb" {
+  source            = "./modules/alb"
+  vpc_id            = module.vpc.vpc_id
+  public_subnet_ids = [
+    module.vpc.public_subnet_1_id,
+    module.vpc.public_subnet_2_id
+  ]
+}
+
 module "emogi_app" {
   source          = "./modules/ec2"
   instance_name   = "emogi-ec2-app"
@@ -10,8 +19,11 @@ module "emogi_app" {
   instance_type   = "t3.micro"
   user_data_path  = "script/initail_server_setting.sh"
   vpc_id          = module.vpc.vpc_id
-  subnet_id       = module.vpc.public_subnet_id
+  subnet_id       = module.vpc.public_subnet_1_id
   bucket_name = local.env_vars["BUCKET_NAME"]
+
+  target_group_arn = module.alb.target_group_arn
+  alb_security_group_id = module.alb.security_group_id
 }
 
 module "s3" {
@@ -28,7 +40,8 @@ module "cloudfront" {
 
 module "rds" {
   source = "./modules/rds"
-  
+
+  env         = "prod"
   db_name     = "emogi"
   db_username = local.env_vars["DB_USERNAME"]
   db_password = local.env_vars["DB_PASSWORD"]

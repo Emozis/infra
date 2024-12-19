@@ -28,3 +28,12 @@ variable "bucket_name" {
   description = "Name of the S3 bucket"
   type        = string
 }
+
+variable "target_group_arn" {
+  type = string
+}
+
+variable "alb_security_group_id" {
+  description = "Security group ID of the ALB"
+  type        = string
+}
