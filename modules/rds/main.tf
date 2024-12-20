@@ -10,7 +10,7 @@ resource "aws_db_subnet_group" "main" {
 
 # RDS Security Group
 resource "aws_security_group" "rds" {
-  name        = "${var.env}-${var.db_name}-sg"
+  name        = "${var.env}-${var.db_name}-rds-sg"
   description = "Security group for RDS PostgreSQL"
   vpc_id      = var.vpc_id
 

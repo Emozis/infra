@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# SSM Agent 설치
+sudo dnf install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+sudo systemctl enable amazon-ssm-agent
+sudo systemctl start amazon-ssm-agent
+
 # 시스템 업데이트
 sudo yum update -y
 
@@ -10,6 +15,7 @@ sudo service docker start
 # docker 그룹 생성 및 ec2-user 추가
 sudo groupadd docker
 sudo usermod -aG docker ec2-user
+sudo usermod -aG docker ssm-user
 newgrp docker
 
 # docker 앱 실행
