@@ -4,7 +4,7 @@ resource "aws_instance" "app" {
   subnet_id     = var.subnet_id
   key_name      = var.key_name
 
-  associate_public_ip_address = true
+  associate_public_ip_address = false
 
   iam_instance_profile = aws_iam_instance_profile.ec2_profile.name
   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
@@ -15,8 +15,13 @@ resource "aws_instance" "app" {
   }
 }
 
-resource "aws_lb_target_group_attachment" "emogi_tg_attachment" {
-  target_group_arn = var.target_group_arn
-  target_id        = aws_instance.app.id
-  port             = 80
+data "aws_eip" "ec2_eip" {
+  tags = {
+    Name = "permanent-emogi-eip"
+  }
+}
+
+resource "aws_eip_association" "eip_assoc" {
+  instance_id   = aws_instance.app.id
+  allocation_id = data.aws_eip.ec2_eip.id
 }

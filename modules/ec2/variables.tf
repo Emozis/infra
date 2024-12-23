@@ -29,15 +29,6 @@ variable "bucket_name" {
   type        = string
 }
 
-variable "target_group_arn" {
-  type = string
-}
-
-variable "alb_security_group_id" {
-  description = "Security group ID of the ALB"
-  type        = string
-}
-
 variable "key_name" {
   description = "Name of the SSH key pair to use for the EC2 instance"
   type        = string
