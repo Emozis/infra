@@ -11,13 +11,13 @@ resource "aws_instance" "app" {
   user_data = file("${var.user_data_path}")
 
   tags = {
-    Name = var.instance_name
+    Name = "${var.project_name}-ec2-app"
   }
 }
 
 data "aws_eip" "ec2_eip" {
   tags = {
-    Name = "permanent-emogi-eip"
+    Name = "emogi-eip"
   }
 }
 

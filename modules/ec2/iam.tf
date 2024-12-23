@@ -1,10 +1,10 @@
 resource "aws_iam_instance_profile" "ec2_profile" {
- name = "${var.instance_name}_profile"
+ name = "${var.project_name}-ec2-profile"
  role = aws_iam_role.ec2_role.name
 }
 
 resource "aws_iam_role" "ec2_role" {
- name = "${var.instance_name}_role"
+ name = "${var.project_name}-ec2-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -20,13 +20,13 @@ resource "aws_iam_role" "ec2_role" {
   })
 
   tags = {
-    Name = "${var.instance_name}_role"
-    Instance = var.instance_name
+    Name = "${var.project_name}-ec2-role"
+    Instance = "${var.project_name}-ec2-app"
   }
 }
 
 resource "aws_iam_role_policy" "secrets_policy" {
- name = "${var.instance_name}_secrets_policy"
+ name = "${var.project_name}-ec2-secrets-policy"
  role = aws_iam_role.ec2_role.id
 
  policy = jsonencode({
@@ -44,7 +44,7 @@ resource "aws_iam_role_policy" "secrets_policy" {
 }
 
 resource "aws_iam_role_policy" "s3_policy" {
-  name = "${var.instance_name}_s3_policy"
+  name = "${var.project_name}-ec2-s3-policy"
   role = aws_iam_role.ec2_role.id
 
   policy = jsonencode({
@@ -68,7 +68,7 @@ resource "aws_iam_role_policy" "s3_policy" {
 }
 
 resource "aws_iam_role_policy" "ssm_policy" {
-  name = "${var.instance_name}_ssm_policy"
+  name = "${var.project_name}-ec2-ssm-policy"
   role = aws_iam_role.ec2_role.id
 
   policy = jsonencode({

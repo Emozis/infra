@@ -3,9 +3,8 @@
 # 시스템 업데이트
 sudo yum update -y
 
-
-# Nginx 설치
-sudo yum install -y nginx
+# Nginx 및 Certbot 설치
+sudo yum install -y nginx certbot python3-certbot-nginx
 
 # docker 설치 및 실행
 sudo yum install -y docker
@@ -24,6 +23,7 @@ sudo systemctl enable docker
 sudo cat > /etc/nginx/conf.d/app.conf <<EOF
 server {
     listen 80;
+    server_name emogi.duckdns.org;
 
     location / {
         proxy_pass http://localhost:8000;
@@ -52,3 +52,6 @@ docker run -d \
   --health-retries=5 \
   --health-start-period=20s \
   isakin/emogi-app:latest
+
+# SSL 인증서 발급 
+sudo certbot --nginx -d emogi.duckdns.org --non-interactive --agree-tos --email minkyo.dev@gmail.com
