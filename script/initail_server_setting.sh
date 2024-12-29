@@ -23,9 +23,10 @@ sudo systemctl enable docker
 sudo cat > /etc/nginx/conf.d/app.conf <<EOF
 server {
     listen 80;
-    server_name emogi.duckdns.org;
+    server_name emogi.duckdns.org emogi.site;
 
     location / {
+        client_max_body_size 10M;
         proxy_pass http://localhost:8000;
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
@@ -40,7 +41,7 @@ sudo systemctl start nginx
 sudo systemctl enable nginx
 
 # docker 앱 실행
-docker pull isakin/emogi-app:latest
+docker pull isakin/emogi-prod:latest
 docker run -d \
   --name emogi-app \
   -e ENV=prod \
@@ -51,7 +52,7 @@ docker run -d \
   --health-timeout=5s \
   --health-retries=5 \
   --health-start-period=20s \
-  isakin/emogi-app:latest
+  isakin/emogi-prod:latest
 
 # SSL 인증서 발급 
-sudo certbot --nginx -d emogi.duckdns.org --non-interactive --agree-tos --email minkyo.dev@gmail.com
+sudo certbot --nginx -d emogi.duckdns.org -d emogi.site --non-interactive --agree-tos --email minkyo.dev@gmail.com

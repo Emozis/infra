@@ -12,6 +12,7 @@ resource "aws_instance" "app" {
 
   tags = {
     Name = "${var.project_name}-ec2-app"
+    Environment = "prod"
   }
 }
 
