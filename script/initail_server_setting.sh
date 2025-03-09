@@ -25,6 +25,21 @@ server {
     listen 80;
     server_name emogi.duckdns.org emogi.site;
 
+    # for Websocket
+    location /api/v1/chatting/ws {
+        proxy_pass http://localhost:8000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 86400;
+        proxy_send_timeout 86400;
+    }
+
+    # for HTTPS
     location / {
         client_max_body_size 10M;
         proxy_pass http://localhost:8000;
